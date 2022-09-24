@@ -29,7 +29,7 @@ vid = cv2.VideoCapture(0)
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 # Face 1
-rects = detector(img_gray, 1)
+#rects = detector(img_gray, 1)
 
 def facial_landmarks(img):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -56,24 +56,29 @@ def facial_landmarks(img):
     return img
 
 
-while(1):
-
-   img = cv2.imread("jim_carrey.png")
-   img = facial_landmarks(img)
-   cv2.imshow("Output", img)
-   if cv2.waitKey(25) & 0xFF == ord('q'):
-        break
-
-
 while(0):
-   ret, img = vid.read()
+    rects = detector(img_gray, 1)
 
-   if ret == True:
-       #Find features in the image using dlib
-       img = facial_landmarks(img)
-       cv2.imshow("Output", img)
-       if cv2.waitKey(25) & 0xFF == ord('q'):
-           break
+    img = cv2.imread("jim_carrey.png")
+    img = facial_landmarks(img)
+    cv2.imshow("Output", img)
+    if cv2.waitKey(25) & 0xFF == ord('q'):
+         break
+
+
+while(1):
+    ret, img_vid = vid.read()
+    rects = detector(img_vid, 1)
+    # img = copy.deepcopy(img_vid)
+
+    img_src = img[rects[0].top()-40:rects[0].bottom()+40,rects[0].left()-40:rects[0].right()+40,:]
+
+    if ret == True:
+        #Find features in the image using dlib
+        img = facial_landmarks(img_vid)
+        cv2.imshow("Output", img)
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            break
 
 
 # show the output image with the face detections + facial landmarks
